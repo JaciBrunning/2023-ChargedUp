@@ -31,21 +31,17 @@ namespace wom {
    public:
     DigitalEncoder(int channelA, int channelB, int ticksPerRotation)
         : Encoder(ticksPerRotation),
-          _channelA(channelA),
-          _channelB(channelB),
-          _nativeEncoder(channelA, channelB){};
+          _nativeEncoder(new frc::Encoder(channelA, channelB)){};
+    
+    DigitalEncoder(frc::Encoder *nativeEncoder, int ticksPerRotation)
+        : Encoder(ticksPerRotation),
+          _nativeEncoder(nativeEncoder) {}
 
     int GetEncoderRawTicks() override;
     double GetEncoderTickVelocity() override;
 
-    int GetChannelA();
-    int GetChannelB();
-
-    int GetSimulationHandle();
-
    private:
-    int          _channelA, _channelB;
-    frc::Encoder _nativeEncoder;
+    frc::Encoder *_nativeEncoder;
   };
 
   class CANSparkMaxEncoder : public Encoder {

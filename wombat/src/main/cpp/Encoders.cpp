@@ -26,23 +26,11 @@ units::radians_per_second_t Encoder::GetEncoderAngularVelocity() {
 }
 
 int DigitalEncoder::GetEncoderRawTicks() {
-  return _nativeEncoder.Get();
+  return _nativeEncoder->Get();
 }
 
 double DigitalEncoder::GetEncoderTickVelocity() {
-  return 1.0 / (double)_nativeEncoder.GetPeriod();
-}
-
-int DigitalEncoder::GetChannelA() {
-  return _channelA;
-}
-
-int DigitalEncoder::GetChannelB() {
-  return _channelB;
-}
-
-int DigitalEncoder::GetSimulationHandle() {
-  return _nativeEncoder.GetFPGAIndex();
+  return 1.0 / (double)_nativeEncoder->GetPeriod();
 }
 
 CANSparkMaxEncoder::CANSparkMaxEncoder(rev::CANSparkMax *controller)
