@@ -12,6 +12,8 @@
 #include "units/torque.h"
 #include "units/voltage.h"
 
+#include <frc/system/plant/DCMotor.h>
+
 namespace wom {
 
 /**
@@ -63,6 +65,15 @@ class WPILIB_DLLEXPORT DCMotor {
         R(nominalVoltage / this->stallCurrent),
         Kv(freeSpeed / (nominalVoltage - R * this->freeCurrent)),
         Kt(this->stallTorque / this->stallCurrent) {}
+
+  /**
+   * Quick adapter to convert back into WPI's types
+   */
+  constexpr frc::DCMotor ToWPI() const {
+    return frc::DCMotor{
+      nominalVoltage, stallTorque, stallCurrent, freeCurrent, freeSpeed
+    };
+  }
 
   /**
    * Returns current drawn by motor with given speed and input voltage.
