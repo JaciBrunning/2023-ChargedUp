@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <frc/simulation/FlywheelSim.h>
+#include <frc/simulation/BatterySim.h>
 
 #include <fstream>
 
@@ -34,6 +35,8 @@ class ShooterTest : public testing::Test {
     0.5 * 3_kg * 2_in * 2_in,
     {0.02}
   };
+
+  frc::sim::BatterySim simBattery;
 };
 
 TEST_F(ShooterTest, PIDSpinUp) {
@@ -45,6 +48,7 @@ TEST_F(ShooterTest, PIDSpinUp) {
   for (units::second_t t = 0_s; t < 5_s; t += 20_ms) {
     encoder.UpdateVel(sim.GetAngularVelocity(), 20_ms);
     shooter.OnUpdate(20_ms);
+    motor.SetVoltageMax(simBattery.Calculate({ sim.GetCurrentDraw() }));
     sim.SetInputVoltage(motor.GetVoltage());
     sim.Update(20_ms);
 

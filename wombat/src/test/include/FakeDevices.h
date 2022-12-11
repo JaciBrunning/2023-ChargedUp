@@ -33,12 +33,16 @@ namespace test {
 
   class FakeVoltageController : public VoltageController {
    public:
+    void SetVoltageMax(units::volt_t v) {
+      vmax = v;
+    }
+
     void SetVoltage(units::volt_t v) override {
       voltage = v;
     }
 
     units::volt_t GetVoltage() override {
-      return voltage;
+      return units::math::min(units::math::max(voltage, -vmax), vmax);
     }
 
     void SetInverted(bool invert) override {
@@ -50,7 +54,7 @@ namespace test {
     }
    private:
     bool inverted = false;
-    units::volt_t voltage{0};
+    units::volt_t voltage{0}, vmax{12};
   };
 }
 }
