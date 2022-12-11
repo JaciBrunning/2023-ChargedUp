@@ -18,7 +18,8 @@ namespace test {
     }
 
     void UpdatePos(units::turn_t turns, units::second_t dt) {
-      _ticks += (turns.value() * GetEncoderTicksPerRotation());
+      _ticks = (turns.value() * GetEncoderTicksPerRotation());
+      // TODO: Fix
       _ticks_per_second = ((turns.value() * GetEncoderTicksPerRotation()) / dt).value();
     }
 
