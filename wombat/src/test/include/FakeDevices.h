@@ -9,7 +9,7 @@ namespace test {
    public:
     using Encoder::Encoder;
 
-    int GetEncoderRawTicks() override {
+    double GetEncoderRawTicks() override {
       return _ticks;
     }
 
@@ -18,17 +18,17 @@ namespace test {
     }
 
     void UpdatePos(units::turn_t turns, units::second_t dt) {
-      _ticks += (int)(turns.value() * GetEncoderTicksPerRotation());
+      _ticks += (turns.value() * GetEncoderTicksPerRotation());
       _ticks_per_second = ((turns.value() * GetEncoderTicksPerRotation()) / dt).value();
     }
 
     void UpdateVel(units::turns_per_second_t turns_per_second, units::second_t dt) {
-      _ticks += (int)(turns_per_second * GetEncoderTicksPerRotation() * dt).value();
-      _ticks_per_second = (int)(turns_per_second * GetEncoderTicksPerRotation()).value();
+      _ticks += (turns_per_second * GetEncoderTicksPerRotation() * dt).value();
+      _ticks_per_second = (turns_per_second * GetEncoderTicksPerRotation()).value();
     }
    private:
     double _ticks_per_second = 0;
-    int _ticks = 0;
+    double _ticks = 0;
   };
 
   class FakeVoltageController : public VoltageController {

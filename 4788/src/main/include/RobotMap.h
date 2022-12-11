@@ -24,7 +24,6 @@ struct RobotMap {
     wom::Gearbox shooterGearbox {
       &shooterMotorGroup,
       &encoder,
-      1.0,
       wom::DCMotor::NEO(3)
     };
 

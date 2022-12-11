@@ -3,11 +3,11 @@
 using namespace wom;
 
 
-int Encoder::GetEncoderTicks() {
+double Encoder::GetEncoderTicks() {
   return GetEncoderRawTicks() - _offset;
 }
 
-int Encoder::GetEncoderTicksPerRotation() {
+double Encoder::GetEncoderTicksPerRotation() {
   return _encoderTicksPerRotation;
 }
 
@@ -25,7 +25,7 @@ units::radians_per_second_t Encoder::GetEncoderAngularVelocity() {
   return n_turns_per_s;
 }
 
-int DigitalEncoder::GetEncoderRawTicks() {
+double DigitalEncoder::GetEncoderRawTicks() {
   return _nativeEncoder->Get();
 }
 
@@ -36,7 +36,7 @@ double DigitalEncoder::GetEncoderTickVelocity() {
 CANSparkMaxEncoder::CANSparkMaxEncoder(rev::CANSparkMax *controller)
   : Encoder(42), _encoder(controller->GetEncoder()) {}
 
-int CANSparkMaxEncoder::GetEncoderRawTicks() {
+double CANSparkMaxEncoder::GetEncoderRawTicks() {
   return _encoder.GetPosition() * GetEncoderTicksPerRotation();
 }
 

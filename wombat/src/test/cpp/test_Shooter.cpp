@@ -14,7 +14,7 @@ class ShooterTest : public testing::Test {
  protected:
   test::FakeVoltageController motor;
   test::FakeEncoder encoder{1024};
-  Gearbox gearbox{&motor, &encoder, 1.0, DCMotor::NEO(3)};
+  Gearbox gearbox{&motor, &encoder, DCMotor::NEO(3)};
 
   ShooterParams params{
     gearbox,
