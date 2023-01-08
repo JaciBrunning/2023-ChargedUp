@@ -33,15 +33,17 @@ namespace wom {
     using angle_pid_conf_t = PIDConfig<units::radian, units::volt>;
     using velocity_pid_conf_t = PIDConfig<units::meters_per_second, units::volt>;
 
-    SwerveModule(SwerveModuleConfig config, angle_pid_conf_t anglePID, velocity_pid_conf_t velocityPID);
+    SwerveModule(std::string path, SwerveModuleConfig config, angle_pid_conf_t anglePID, velocity_pid_conf_t velocityPID);
     void OnUpdate(units::second_t dt);
 
     void SetIdle();
     void SetPID(units::radian_t angle, units::meters_per_second_t speed);
   
-    frc::SwerveModuleState GetState();
+    // frc::SwerveModuleState GetState();
+    frc::SwerveModulePosition GetPosition() const;
 
     units::meters_per_second_t GetSpeed() const;
+    units::meter_t GetDistance() const;
 
     const SwerveModuleConfig &GetConfig() const;
 
@@ -65,7 +67,6 @@ namespace wom {
     PIDConfig<units::meter, units::meters_per_second> posePositionPID;
 
     wpi::array<double, 3> stateStdDevs{0.0, 0.0, 0.0};
-    wpi::array<double, 1> localMeasurementStdDevs{0.0};
     wpi::array<double, 3> visionMeasurementStdDevs{0.0, 0.0, 0.0};
 
   };
@@ -96,7 +97,7 @@ namespace wom {
 
   class SwerveDrive : public behaviour::HasBehaviour {
    public:
-    SwerveDrive(SwerveDriveConfig config, frc::Pose2d initialPose);
+    SwerveDrive(std::string path, SwerveDriveConfig config, frc::Pose2d initialPose);
 
     void OnUpdate(units::second_t dt);
 

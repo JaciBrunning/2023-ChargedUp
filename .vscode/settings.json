@@ -16,7 +16,9 @@
   },
   "C_Cpp.default.configurationProvider": "vscode-wpilib",
   "files.associations": {
-    "*.inc": "cpp",
+    "*.ejs": "html",
+    "*.tex": "latex",
+    "*.inc": "cpp"
     "iosfwd": "cpp",
     "optional": "cpp",
     "algorithm": "cpp",

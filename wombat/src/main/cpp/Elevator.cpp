@@ -6,9 +6,9 @@
 
 using namespace wom;
 
-Elevator::Elevator(ElevatorParams params)
+Elevator::Elevator(std::string path, ElevatorParams params)
   : _params(params), _state(ElevatorState::kIdle),
-  _pid{params.pid},
+  _pid{path + "/pid", params.pid},
   _table(nt::NetworkTableInstance::GetDefault().GetTable("elevator")) {}
 
 
@@ -68,4 +68,29 @@ void Elevator::SetZeroing() {
 
 void Elevator::SetIdle() {
   _state = ElevatorState::kIdle;
+}
+
+/* SIMULATION */
+wom::sim::ElevatorSim::ElevatorSim(ElevatorParams params)
+  : params(params),
+    sim(params.gearbox.motor, 1.0, params.mass, params.radius,
+        0_m, params.maxHeight, true),
+    encoder(params.gearbox.encoder->MakeSimEncoder()),
+    lowerLimit(params.bottomSensor ? new frc::sim::DIOSim(*params.bottomSensor) : nullptr),
+    upperLimit(params.topSensor ? new frc::sim::DIOSim(*params.topSensor) : nullptr)
+  {}
+
+void wom::sim::ElevatorSim::Update(units::volt_t voltage, units::second_t dt) {
+  sim.SetInputVoltage(voltage);
+  sim.Update(dt);
+
+  encoder->SetEncoderTurns(1_rad * sim.GetPosition() / params.radius);
+  if (lowerLimit) lowerLimit->SetValue(sim.HasHitLowerLimit());
+  if (upperLimit) upperLimit->SetValue(sim.HasHitUpperLimit());
+
+  nt::NetworkTableInstance::GetDefault().GetEntry("elevator/sim/height").SetDouble(sim.GetPosition().value());
+}
+
+units::meter_t wom::sim::ElevatorSim::GetHeight() const {
+  return sim.GetPosition();
 }
