@@ -11,10 +11,10 @@ namespace bilya {
   template<size_t N>
   class Emitter {
    public:
-    Emitter(const EmitterConfig &config) : _config(config) {}
+    Emitter(const EmitterConfig &config) : _emitterConfig(config) {}
 
     virtual const EmitterConfig &GetEmitterConfig() const {
-      return _config;
+      return _emitterConfig;
     }
 
     virtual PointGradient<N> Calculate(const Vec<N> &position) const = 0;
@@ -25,8 +25,8 @@ namespace bilya {
 
       auto config = GetEmitterConfig();
 
-      double potential = -config.alpha * exp( -(config.gamma / 2 * dist * dist) );
-      auto gradient = delta * -config.gamma * potential;
+      double potential = -config.alpha * std::expf( -(config.gamma / 2 * dist * dist) );
+      auto gradient = -config.gamma * delta * potential;
 
       return PointGradient<N> {
         position,
@@ -35,12 +35,16 @@ namespace bilya {
       };
     }
    private:
-    EmitterConfig _config;
+    EmitterConfig _emitterConfig;
   };
 
   template<size_t N, typename It>
   PointGradient<N> CalculateNet(const Vec<N> &position, It start, It end) {
-    PointGradient cumulative;
+    PointGradient<N> cumulative {
+      Vec<N>::Zero(),
+      Vec<N>::Zero(),
+      0
+    };
 
     for (auto it = start; it != end; it++) {
       cumulative = cumulative + (*it)->Calculate(position);
