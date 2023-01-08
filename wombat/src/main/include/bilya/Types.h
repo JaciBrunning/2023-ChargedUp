@@ -1,24 +1,31 @@
 #pragma once
 
-#include <frc/geometry/Translation2d.h>
-#include <units/velocity.h>
+#include <Eigen/Core>
 
 namespace bilya {
-  using Position2d = frc::Translation2d;
+  template<size_t N>
+  using Vec = Eigen::Vector<double, N>;
 
-  struct Gradient2d {
-    units::meters_per_second_t x, y;
-
-    Gradient2d operator+(const Gradient2d &other);
-    Gradient2d operator-(const Gradient2d &other);
-  };
-
+  template<size_t N>
   struct PointGradient {
-    Position2d position{0_m, 0_m};
-    Gradient2d gradient{0_mps, 0_mps};
+    Vec<N> position;
+    Vec<N> gradient;
     double potential{0};
 
-    PointGradient operator+(const PointGradient &other);
-    PointGradient operator-(const PointGradient &other);
+    PointGradient operator+(const PointGradient &other) {
+      return PointGradient {
+        position,
+        gradient + other.gradient,
+        potential + other.potential
+      };
+    }
+
+    PointGradient operator-(const PointGradient &other) {
+      return PointGradient {
+        position,
+        gradient - other.gradient,
+        potential - other.potential
+      };
+    }
   };
 }

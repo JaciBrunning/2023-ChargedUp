@@ -3,12 +3,15 @@
 #include "bilya/emitters/BaseEmitter.h"
 
 namespace bilya {
-  class Point : public Emitter {
+  template<size_t N>
+  class Point : public Emitter<N> {
    public:
-    Point(Position2d source, EmitterConfig emitter);
+    Point(Vec<N> source, EmitterConfig emitter) : Emitter<N>(emitter), _source(source) {}
 
-    PointGradient Calculate(const Position2d &position) const override;
+    PointGradient<N> Calculate(const Vec<N> &position) const override {
+      return this->CalculateEmitter(_source, position);
+    }
    private:
-    Position2d _source;
+    Vec<N> _source;
   };
 }
